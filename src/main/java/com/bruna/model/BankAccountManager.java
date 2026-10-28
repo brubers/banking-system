@@ -1,5 +1,6 @@
 package com.bruna.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +10,15 @@ public class BankAccountManager {
     public BankAccountManager() {
     }
 
-    public void listAccounts(){
-        for (BankAccount account : accounts){
+    public void listAccounts() {
+        for (BankAccount account : accounts) {
             System.out.println(account);
         }
     }
 
-    public boolean addAccount(BankAccount account){
+    public boolean addAccount(BankAccount account) {
         //deal with null later
-        if(findAccountByNumber(account.getAccountNumber()) != null){
+        if (findAccountByNumber(account.getAccountNumber()) != null) {
             System.out.println("The account already exists");
             return false;
         }
@@ -25,14 +26,35 @@ public class BankAccountManager {
         return true;
     }
 
-    public BankAccount findAccountByNumber(String accountNumber){
-        for (BankAccount account : accounts){
-            if (account.getAccountNumber().equals(accountNumber)){
+    public BankAccount findAccountByNumber(String accountNumber) {
+        for (BankAccount account : accounts) {
+            if (account.getAccountNumber().equals(accountNumber)) {
                 return account;
             }
         }
         return null;
     }
 
+    public boolean transferMoney(String from, String to, BigDecimal amount) {
+        BankAccount originAccount = findAccountByNumber(from); //findAccountByNumber returns the obj i'm trying to find. returns none if don't
+        BankAccount destinyAccount = findAccountByNumber(to);
+        boolean result = false;
+
+        if (originAccount == null) { //in case the obj wasn't find, return false
+            System.out.println("Account to be transferred from couldn't be found.");
+        } else if (destinyAccount == null) {
+            System.out.println("Account to be transferred to couldn't be found");
+        }
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) { //less than = -1 ; equal = 0; greater = 1
+            System.out.println("The money amount to be transferred isn't positive");
+        } else {
+            if (originAccount.withdrawMoney(amount)) {
+                destinyAccount.depositMoney(amount);
+                return result = true;
+            }
+        }
+        return result;
+    }
 
 }
