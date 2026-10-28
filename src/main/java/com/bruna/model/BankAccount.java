@@ -29,21 +29,29 @@ public class BankAccount {
         return owner;
     }
 
-    public boolean depositMoney(BigDecimal money){
-        //deal with null later
-        if((money.compareTo(BigDecimal.ZERO) <= 0)){
+    public boolean depositMoney(BigDecimal money) {
+        if ((money == null) || (money.compareTo(BigDecimal.ZERO) <= 0) ) {
             return false;
         }
         balance = balance.add(money);
         return true;
     }
 
-    public boolean withdrawMoney(BigDecimal money){
-        //deal with null later
-        if ((money.compareTo(BigDecimal.ZERO) <= 0) || (money.compareTo(balance) > 0)) { //comparing if the quantity of money i want to withdraw is less or equal than 0, or if it is a bigger amount than the one we already have
+    public boolean withdrawMoney(BigDecimal money) {
+        if ((money == null) || (money.compareTo(BigDecimal.ZERO) <= 0) || (money.compareTo(balance) > 0)) { //comparing if the quantity of money i want to withdraw is less or equal than 0, or if it is a bigger amount than the one we already have
             return false;
         }
         balance = balance.subtract(money);
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "BankAccount{" +
+                "id=" + id +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", balance=" + balance +
+                ", owner=" + owner +
+                '}';
     }
 }
