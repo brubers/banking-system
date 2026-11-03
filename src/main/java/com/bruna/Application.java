@@ -1,5 +1,7 @@
 package com.bruna;
 
+import com.bruna.dao.BankAccountDAO;
+import com.bruna.dao.ClientDAO;
 import com.bruna.model.BankAccount;
 import com.bruna.model.BankAccountManager;
 import com.bruna.model.Client;
@@ -11,14 +13,17 @@ public class Application {
 
     public static void main(String[] args){
         Application app = new Application();
-
         app.menu();
+
 
 
     }
 
     private final Scanner sc;
     private final BankAccountManager manager;
+    //sql
+    private ClientDAO clientDAO = new ClientDAO();
+    private BankAccountDAO bankAccountDAO = new BankAccountDAO();
 
     public Application() {
         sc = new Scanner(System.in); //sc recebe os dados
@@ -60,12 +65,22 @@ public class Application {
                 System.out.println("What is the account number?");
                 String accountNumber = sc.nextLine();
 
-                BankAccount bankAccount = new BankAccount(accountNumber, new Client(name, cpf));
+                Client client = new Client(name, cpf);
+                int clientId = clientDAO.save(client); //aqui vai retornar o ID criado pelo sql pra usarmos
+                if (clientId <= 0) {
+                    System.out.println("Client could not be created.");
+                    break;
+                }
+
+                BankAccount bankAccount = new BankAccount(accountNumber, client);
+                boolean accountSaved = bankAccountDAO.save(bankAccount, clientId);
+
                 //aqui tenta adicionar retornando um booleano pra colocarmos a mensagem
-                if (manager.addAccount(bankAccount)) {
+                if (accountSaved) {
+                    manager.addAccount(bankAccount);
                     System.out.println("New account successfully added!");
                 } else {
-                    System.out.println("Account could not be created. It may already exists.");
+                    System.out.println("Account could not be created. It may already exist.");
                 }
 
                 break;
