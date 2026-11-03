@@ -11,10 +11,9 @@ import java.util.Scanner;
 
 public class Application {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Application app = new Application();
         app.menu();
-
 
 
     }
@@ -87,93 +86,75 @@ public class Application {
             }
             case 2: {
                 System.out.println();
-                if (manager.isEmpty()) {
-                    System.out.println("No account has been registered.");
-                    return;
-                }
-                manager.listAccounts();
+                bankAccountDAO.listAccounts();
                 break;
             }
             case 3: {
-                System.out.println();
-                System.out.println("Insert the account number you're searching for:");
+                System.out.println("Enter the account number:");
                 String accountNumber = sc.nextLine();
-                BankAccount account = accountWasFound(accountNumber);
-                if (account != null) {
-                    System.out.println(account);
-                }
+
+                bankAccountDAO.findAccountByNumber(accountNumber);
+
+                break;
             }
             case 4: {
                 System.out.println();
                 System.out.println("Which account do you want to deposit to?");
-                String accountNumber = sc.nextLine();
-                BankAccount account = accountWasFound(accountNumber);
 
-                if (account == null) {
-                    return;
-                }
+                String accountNumber = sc.nextLine();
 
                 BigDecimal amount = readAmount("How much money will you deposit?");
 
-                if (account.depositMoney(amount)) {
+                boolean result = bankAccountDAO.depositMoney(accountNumber, amount);
+                if (result) {
                     System.out.println("Deposit successful!");
                 } else {
-                    System.out.println("Invalid deposit amount.");
+                    System.out.println("Deposit could not be completed.");
                 }
                 break;
             }
+
             case 5: {
                 System.out.println();
                 System.out.println("Which account do you want to withdraw from?");
                 String accountNumber = sc.nextLine();
-                BankAccount account = accountWasFound(accountNumber);
-                if (account == null) {
-                    return;
-                }
+
                 BigDecimal amount = readAmount("How much money will you withdraw?");
-                if (account.withdrawMoney(amount)) {
+
+                boolean result = bankAccountDAO.withdrawMoney(accountNumber, amount);
+
+                if (result) {
                     System.out.println("Withdrawal successful!");
                 } else {
-                    System.out.println("Invalid amount or insufficient balance.");
+                    System.out.println("Withdrawal could not be completed.");
                 }
+
                 break;
             }
             case 6: {
                 System.out.println();
-                System.out.println("Which account do you want to transfer money from?");
-                String from = sc.nextLine();
-                BankAccount originAccount = accountWasFound(from);
-                if (originAccount == null) {
-                    return;
-                }
-                System.out.println("Which account do you want to transfer money to?");
-                String to = sc.nextLine();
-                BankAccount destinyAccount = accountWasFound(to);
-                if (destinyAccount == null) {
-                    return;
-                }
-                BigDecimal amount = readAmount("How much money is going to be transferred?");
-                boolean result = manager.transferMoney(originAccount.getAccountNumber(), destinyAccount.getAccountNumber(), amount
-                );
+                System.out.println("From which account?");
+                String fromAccount = sc.nextLine();
+
+                System.out.println("To which account?");
+                String toAccount = sc.nextLine();
+
+                BigDecimal amount = readAmount("How much money will you transfer?");
+
+                boolean result = bankAccountDAO.transferMoney(fromAccount, toAccount, amount);
+
                 if (result) {
-                    System.out.println("Money transferred successfully!");
+                    System.out.println("Transfer successful!");
                 } else {
                     System.out.println("Transfer could not be completed.");
                 }
+
                 break;
             }
             default:
                 System.out.println("Number not valid, try again.");
                 break;
         }
-    }
-
-    public BankAccount accountWasFound(String acc){
-        BankAccount result = manager.findAccountByNumber(acc);
-        if(result == null){
-            System.out.println("Account not found.");
-        }
-        return result;
     }
     //usando tratamento de excecoes pra ler um int
     private int readInt(String msg) {
@@ -187,6 +168,7 @@ public class Application {
             }
         }
     }
+
     //metodo auxiliar pra ler a quantidade de dinheiro
     private BigDecimal readAmount(String message) {
         while (true) {
