@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BankAccountManager {
+    //nossa lsita de contas é adicionada em conjunto com a inicializacao do bankaccountmanager.
     private final List<BankAccount> accounts = new ArrayList<>();
 
-    public BankAccountManager() {
-    }
-
-    public List<BankAccount> getAccounts() {
-        return accounts;
+    //avaliando se accounts tá vazio
+    public boolean isEmpty() {
+        return accounts.isEmpty();
     }
 
     public void listAccounts() {
@@ -21,54 +20,52 @@ public class BankAccountManager {
     }
 
     public boolean addAccount(BankAccount account) {
-        if(account == null){
+        if (account == null) {
             return false;
         }
-        if (findAccountByNumber(account.getAccountNumber()) != null) {;
+
+        if (findAccountByNumber(account.getAccountNumber()) != null) {
             return false;
         }
+
         accounts.add(account);
         return true;
     }
 
     public BankAccount findAccountByNumber(String accountNumber) {
+        if (accountNumber == null) {
+            return null;
+        }
 
         for (BankAccount account : accounts) {
             if (account.getAccountNumber().equals(accountNumber)) {
                 return account;
             }
         }
+
         return null;
     }
 
     public boolean transferMoney(String from, String to, BigDecimal amount) {
-        BankAccount originAccount = findAccountByNumber(from); //findAccountByNumber returns the obj i'm trying to find. returns none if don't
+        BankAccount originAccount = findAccountByNumber(from);
         BankAccount destinyAccount = findAccountByNumber(to);
 
-        if (originAccount == null) { //in case the obj wasn't find, return false
-            System.out.println("Account to be transferred from couldn't be found.");
-            return false;
-        }
-        if (destinyAccount == null) {
-            System.out.println("Account to be transferred to couldn't be found");
+        if (originAccount == null || destinyAccount == null) {
             return false;
         }
 
-        if(originAccount.equals(destinyAccount)){ //if both obj are the same
-            System.out.println("The accounts are the same.");
+        if (originAccount.equals(destinyAccount)) {
             return false;
         }
 
-        if ((amount == null)||(amount.compareTo(BigDecimal.ZERO) <= 0)) { //less than = -1 ; equal = 0; greater = 1
-            System.out.println("The money amount to be transferred isn't correct");
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             return false;
-        } else {
-            if (originAccount.withdrawMoney(amount)) {
-                destinyAccount.depositMoney(amount);
-                return true;
-            }
         }
-        return false;
+
+        if (!originAccount.withdrawMoney(amount)) {
+            return false;
+        }
+
+        return destinyAccount.depositMoney(amount);
     }
-
 }

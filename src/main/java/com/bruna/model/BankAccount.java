@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 public class BankAccount {
     private Integer id;
-    private final String accountNumber; //string cuz we aren't calculating it. it is just a way to identify.
-    private BigDecimal balance = BigDecimal.ZERO; //way more controlled precision! & STARTING WITH 0
+    private final String accountNumber;
+    private BigDecimal balance = BigDecimal.ZERO;
     private final Client owner;
 
     public BankAccount(String accountNumber, Client owner) {
@@ -30,7 +30,7 @@ public class BankAccount {
     }
 
     public boolean depositMoney(BigDecimal money) {
-        if ((money == null) || (money.compareTo(BigDecimal.ZERO) <= 0) ) {
+        if (money == null || money.compareTo(BigDecimal.ZERO) <= 0) {
             return false;
         }
         balance = balance.add(money);
@@ -38,7 +38,7 @@ public class BankAccount {
     }
 
     public boolean withdrawMoney(BigDecimal money) {
-        if ((money == null) || (money.compareTo(BigDecimal.ZERO) <= 0) || (money.compareTo(balance) > 0)) { //comparing if the quantity of money i want to withdraw is less or equal than 0, or if it is a bigger amount than the one we already have
+        if (money == null || money.compareTo(BigDecimal.ZERO) <= 0 || money.compareTo(balance) > 0) {
             return false;
         }
         balance = balance.subtract(money);
