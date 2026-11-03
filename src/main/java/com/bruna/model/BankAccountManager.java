@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BankAccountManager {
-    private List<BankAccount> accounts = new ArrayList<>();
+    private final List<BankAccount> accounts = new ArrayList<>();
 
     public BankAccountManager() {
+    }
+
+    public List<BankAccount> getAccounts() {
+        return accounts;
     }
 
     public void listAccounts() {
@@ -20,8 +24,7 @@ public class BankAccountManager {
         if(account == null){
             return false;
         }
-        if (findAccountByNumber(account.getAccountNumber()) != null) {
-            System.out.println("The account already exists");
+        if (findAccountByNumber(account.getAccountNumber()) != null) {;
             return false;
         }
         accounts.add(account);
@@ -29,6 +32,7 @@ public class BankAccountManager {
     }
 
     public BankAccount findAccountByNumber(String accountNumber) {
+
         for (BankAccount account : accounts) {
             if (account.getAccountNumber().equals(accountNumber)) {
                 return account;
@@ -43,7 +47,9 @@ public class BankAccountManager {
 
         if (originAccount == null) { //in case the obj wasn't find, return false
             System.out.println("Account to be transferred from couldn't be found.");
-        } else if (destinyAccount == null) {
+            return false;
+        }
+        if (destinyAccount == null) {
             System.out.println("Account to be transferred to couldn't be found");
             return false;
         }

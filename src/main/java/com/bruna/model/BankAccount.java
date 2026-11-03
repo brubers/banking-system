@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 public class BankAccount {
     private Integer id;
-    private String accountNumber; //string cuz we aren't calculating it. it is just a way to identify.
+    private final String accountNumber; //string cuz we aren't calculating it. it is just a way to identify.
     private BigDecimal balance = BigDecimal.ZERO; //way more controlled precision! & STARTING WITH 0
-    private Client owner;
+    private final Client owner;
 
     public BankAccount(String accountNumber, Client owner) {
         this.accountNumber = accountNumber;
