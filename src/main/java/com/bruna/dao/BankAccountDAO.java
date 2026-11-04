@@ -226,4 +226,23 @@ public class BankAccountDAO {
         }
     }
 
+    public BigDecimal getBalance(String accountNumber){
+        String query = "SELECT balance FROM bank_accounts WHERE account_number = ?";
+
+        try(Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setString(1, accountNumber); //substitui o primeiro ? pelo valor
+
+            try(ResultSet resultSet = statement.executeQuery()){ //aqui é pra gente retornar consultas, que vamos reetornar o que ela trazer pra gente
+                if(resultSet.next()){
+                    return resultSet.getBigDecimal("balance");
+                }
+                return null; //caso não encontre a conta, null.
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
