@@ -3,7 +3,6 @@ package com.bruna;
 import com.bruna.dao.BankAccountDAO;
 import com.bruna.dao.ClientDAO;
 import com.bruna.model.BankAccount;
-import com.bruna.model.BankAccountManager;
 import com.bruna.model.Client;
 
 import java.math.BigDecimal;
@@ -19,14 +18,12 @@ public class Application {
     }
 
     private final Scanner sc;
-    private final BankAccountManager manager;
     //sql
-    private ClientDAO clientDAO = new ClientDAO();
-    private BankAccountDAO bankAccountDAO = new BankAccountDAO();
+    private final ClientDAO clientDAO = new ClientDAO();
+    private final BankAccountDAO bankAccountDAO = new BankAccountDAO();
 
     public Application() {
         sc = new Scanner(System.in); //sc recebe os dados
-        manager = new BankAccountManager(); //responsavel por todas as operacoes
     }
 
     public void menu() {
@@ -72,14 +69,13 @@ public class Application {
                 }
 
                 BankAccount bankAccount = new BankAccount(accountNumber, client);
+                //aqui tenta adicionar retornando um booleano pra colocarmos a mensagem
                 boolean accountSaved = bankAccountDAO.save(bankAccount, clientId);
 
-                //aqui tenta adicionar retornando um booleano pra colocarmos a mensagem
                 if (accountSaved) {
-                    manager.addAccount(bankAccount);
                     System.out.println("New account successfully added!");
                 } else {
-                    System.out.println("Account could not be created. It may already exist.");
+                    System.out.println("Account could not be created.");
                 }
 
                 break;
@@ -176,7 +172,13 @@ public class Application {
             String input = sc.nextLine().trim().replace(",", ".");
 
             try { //aqui converte o valor do input pra bigdecimal
-                return new BigDecimal(input);
+                BigDecimal amount = new BigDecimal(input);
+                if(amount.compareTo(BigDecimal.ZERO) <= 0){
+                    System.out.println("Amount must be greater than zero.");
+                    continue;
+                }
+                return amount;
+
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid amount.");
             }
