@@ -6,11 +6,9 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String URL = "JDBC:mysql://localhost:3306/banking_system";
-
-    private static final String USER = "root";
-
-    private static final String PASSWORD = "admin";
+    private static final String URL = "url";
+    private static final String USER = "user";
+    private static final String PASSWORD = "password";
 
     public static Connection getConnection() throws SQLException{
         return DriverManager.getConnection(URL, USER, PASSWORD);

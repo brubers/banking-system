@@ -36,6 +36,7 @@ public class Application {
             System.out.println("4 - Deposit");
             System.out.println("5 - Withdraw");
             System.out.println("6 - Transfer");
+            System.out.println("7 - Check Balance");
             System.out.println("0 - Exit");
 
             int choice = readInt("Select one operation: ");
@@ -143,6 +144,20 @@ public class Application {
                     System.out.println("Transfer successful!");
                 } else {
                     System.out.println("Transfer could not be completed.");
+                }
+
+                break;
+            }
+            case 7: {
+                System.out.println("Enter the account number:");
+                String accountNumber = sc.nextLine();
+
+                BigDecimal balance = bankAccountDAO.getBalance(accountNumber);
+
+                if (balance != null) {
+                    System.out.println("Current balance: R$ " + balance);
+                } else {
+                    System.out.println("Account not found.");
                 }
 
                 break;
